@@ -52,29 +52,49 @@
 
 int			ft_keys(int key, t_global *g)
 {
+	double pre_dir_x;
+	double pre_plane_x;
+
 	if (key == ESC)
 	{
 		system("leaks fractol > leaks");
 		exit(0);
 	}
-	// else if (key == MOVE_UP)
-	// 	g->fr.move_y -= 0.2 / g->fr.zoom;
-	// else if (key == MOVE_DOWN)
-	// 	g->fr.move_y += 0.2 / g->fr.zoom;
-	// else if (key == MOVE_LEFT)
-	// 	g->fr.move_x -= 0.2 / g->fr.zoom;
-	// else if (key == MOVE_RIGHT)
-	// 	g->fr.move_x += 0.2 / g->fr.zoom;
-	// else if (key == ITER_PLUS)
-	// 	g->fr.max_iterations += 1;
-	// else if (key == ITER_MINUS && g->fr.max_iterations > 1)
-	// 	g->fr.max_iterations -= 1;
-	// else if (key == CENTER_ZOOM_IN)
-	// 	g->fr.zoom += 0.2 * g->fr.zoom;
-	// else if (key == CENTER_ZOOM_OUT)
-	// 	g->fr.zoom -= 0.2 * g->fr.zoom;
-	// else
-	// 	ft_keys_color(key, g);
+	//move forward if no wall in front of you
+	if (key == MOVE_UP)
+	{
+		if (world_map[(int)(g->w.pos_x + g->w.dir_x * g->w.move_speed)][(int)g->w.pos_y] == 0)
+			g->w.pos_x += g->w.dir_x * g->w.move_speed;
+		if(world_map[(int)g->w.pos_x][(int)(g->w.pos_y + g->w.dir_y * g->w.move_speed)] == 0)
+			g->w.pos_y += g->w.dir_y * g->w.move_speed;
+	}
+	//move backwards if no wall behind you
+	else if (key == MOVE_DOWN)
+	{
+		if (world_map[(int)(g->w.pos_x - g->w.dir_x * g->w.move_speed)][(int)g->w.pos_y] == 0)
+			g->w.pos_x -= g->w.dir_x * g->w.move_speed;
+		if(world_map[(int)g->w.pos_x][(int)(g->w.pos_y - g->w.dir_y * g->w.move_speed)] == 0)
+			g->w.pos_y -= g->w.dir_y * g->w.move_speed;
+	}
+	if (key == ROT_LEFT)
+	{
+		pre_dir_x = g->w.dir_x;
+		g->w.dir_x = g->w.dir_x * cos(g->w.rot_speed) - g->w.dir_y * sin(g->w.rot_speed);
+		g->w.dir_y = pre_dir_x * sin(g->w.rot_speed) + g->w.dir_y * cos(g->w.rot_speed);
+		pre_plane_x = g->w.plane_x;
+		g->w.plane_x = g->w.plane_x * cos(g->w.rot_speed) - g->w.plane_y * sin(g->w.rot_speed);
+		g->w.plane_y = pre_plane_x * sin(g->w.rot_speed) + g->w.plane_y * cos(g->w.rot_speed);
+	}
+	else if (key == ROT_RIGHT)
+	{
+		pre_dir_x = g->w.dir_x;
+		g->w.dir_x = g->w.dir_x * cos(-g->w.rot_speed) - g->w.dir_y * sin(-g->w.rot_speed);
+		g->w.dir_y = pre_dir_x * sin(-g->w.rot_speed) + g->w.dir_y * cos(-g->w.rot_speed);
+		pre_plane_x = g->w.plane_x;
+		g->w.plane_x = g->w.plane_x * cos(-g->w.rot_speed) - g->w.plane_y * sin(-g->w.rot_speed);
+		g->w.plane_y = pre_plane_x * sin(-g->w.rot_speed) + g->w.plane_y * cos(-g->w.rot_speed);
+	}
+
 	ft_re_draw(g);
 	return (0);
 }

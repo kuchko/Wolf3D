@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fractol.h"
+#include "wolf3d.h"
 
 void	ft_print_color(int color)
 {
@@ -40,13 +40,22 @@ int		change_color_rgb(int color, int step_x, int step_y, int alfa_step)
 	return ((alfa << 24) | (r << 16) | (g << 8) | b);
 }
 
-void	ft_putpixel(t_global *f, int x, int y, int color)
+void	ft_putpixel(t_global *g, int x, int y, int color)
 {
 	int	*i;
 
 	if (x > -1 && x < WIDTH && y > -1 && y < HIGHT)
 	{
-		i = (int*)f->adr;
+		i = (int*)g->adr;
 		i[y * WIDTH + x] = color;
 	}
+}
+
+void	ft_put_v_line(t_global *g, int x, int color)
+{
+	int y;
+
+	y = g->w.line_start;
+	while (y <= g->w.line_end)
+		ft_putpixel(g, x, y++, color);
 }
