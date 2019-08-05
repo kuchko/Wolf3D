@@ -44,10 +44,10 @@ void	ft_putpixel(t_global *g, int x, int y, int color)
 {
 	int	*i;
 
-	if (x > -1 && x < WIDTH && y > -1 && y < HIGHT)
+	if (x > -1 && x < IMG_WIDTH && y > -1 && y < IMG_HIGHT)
 	{
 		i = (int*)g->adr;
-		i[y * WIDTH + x] = color;
+		i[y * IMG_WIDTH + x] = color;
 	}
 }
 
@@ -55,7 +55,9 @@ void	ft_put_v_line(t_global *g, int x, int color)
 {
 	int y;
 
+
 	y = g->w.line_start;
 	while (y <= g->w.line_end)
 		ft_putpixel(g, x, y++, color);
+	// ft_printf("ft_put_v_line x = %d; y = {%d,%d}; %x \n", x, g->w.line_start, y--, color);
 }

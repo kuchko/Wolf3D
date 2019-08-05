@@ -44,9 +44,12 @@ void	ft_threads(t_global *g)
 int		ft_re_draw(t_global *g)
 {
 	// ft_threads(g);
+	// ft_bzero(g->adr, sizeof(g->adr));
+	// mlx_clear_window(g->mlx_ptr, g->win_ptr);
+	mlx_destroy_image(g->mlx_ptr, g->img_ptr);
+	g->img_ptr = mlx_new_image(g->mlx_ptr, IMG_WIDTH, IMG_HIGHT);
 	draw_wolf3d(g, &g->w);
 	mlx_put_image_to_window(g->mlx_ptr, g->win_ptr, g->img_ptr, 0, 0);
-	ft_bzero(g->adr, sizeof(g->adr));
 	return (0);
 }
 
@@ -56,6 +59,7 @@ void	draw_wolf3d(t_global *g, t_wolf *w)
 {
 	int x;
 
+	ft_printf("draw_wolf3d\n");
 	x = -1;
 	while(++x < IMG_WIDTH)
 	{
@@ -108,8 +112,12 @@ void	draw_wolf3d(t_global *g, t_wolf *w)
 				w->map_y += w->step_y;
 				w->side = 1;
 			}
+			// ft_printf("draw_wolf3d - befor: [%d, %d] = %d\n", w->map_x, w->map_y,world_map[w->map_x][w->map_y]);
+
 			//Check if ray has hit a wall
-			if (world_map[w->map_x][w->map_y] > 0) w->hit = 1;
+			if (world_map[w->map_x][w->map_y] > 0)
+				w->hit = 1;
+			// ft_printf("draw_wolf3d - after: [%d, %d] = %d\n", w->map_x, w->map_y,world_map[w->map_x][w->map_y]);
 		}
 		//Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
 		if (w->side == 0)
@@ -127,6 +135,7 @@ void	draw_wolf3d(t_global *g, t_wolf *w)
 		w->line_end = w->line_height / 2 + IMG_HIGHT / 2;
 		if (w->line_end >= IMG_HIGHT)
 			w->line_end = IMG_HIGHT - 1;
+		// ft_printf("color check\n");
 
 		//choose wall color
 		int color;
@@ -148,14 +157,17 @@ void	draw_wolf3d(t_global *g, t_wolf *w)
 				color = 0xFFFF00;
 				break; //yellow
 		}
-
+		// ft_printf("color = %x\n", color);
 		//give x and y sides different brightness
 		if (w->side == 1)
 			color = color / 2;
 		//draw the pixels of the stripe as a vertical line
 		// verLine(x, line_start, line_end, color);
 		ft_put_v_line(g, x, color);
+
+
 	}
+	ft_printf("debug END\n");
 
 
 		//timing for input and FPS counter
@@ -202,16 +214,19 @@ void	draw_wolf3d(t_global *g, t_wolf *w)
 // 	}
 // }
 
-int			ft_draw(t_global *g, t_wolf *w)
+int			ft_draw(t_global *g)
 {
+	ft_printf("ft_draw\n");
 
 	// ft_draw_menu(g);
-	draw_wolf3d(g, w);
+	// draw_wolf3d(g, w);
+	ft_re_draw(g);
 	mlx_hook(g->win_ptr, 17, 0, ft_x, g);
-	// mlx_hook(g->win_ptr, 2, 0, ft_keys, g);
-	// mlx_hook(g->win_ptr, 4, 0, ft_mouse_press, g);
+	mlx_hook(g->win_ptr, 2, 0, ft_keys, g);
+	mlx_hook(g->win_ptr, 4, 0, ft_mouse_press, g);
 	// mlx_hook(g->win_ptr, 5, 0, ft_mouse_release, g);
 	// mlx_hook(g->win_ptr, 6, 0, ft_mouse_move, g);
+	// mlx_expose_hook (g->win_ptr, ft_re_draw, g);
 	mlx_loop(g->mlx_ptr);
 	return (0);
 }

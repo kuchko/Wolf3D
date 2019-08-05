@@ -57,11 +57,27 @@ int			ft_keys(int key, t_global *g)
 
 	if (key == ESC)
 	{
-		system("leaks fractol > leaks");
+		system("leaks wolf3d > leaks");
 		exit(0);
 	}
 	//move forward if no wall in front of you
-	if (key == MOVE_UP)
+	if (key == STRAFE_LEFT)
+	{
+		if (world_map[(int)(g->w.pos_x - g->w.dir_y * g->w.move_speed)][(int)g->w.pos_y] == 0)
+			g->w.pos_x -= g->w.dir_y * g->w.move_speed;
+		if (world_map[(int)g->w.pos_x][(int)(g->w.pos_y + g->w.dir_x * g->w.move_speed)] == 0)
+			g->w.pos_y += g->w.dir_x * g->w.move_speed;
+
+	}
+	else if (key == STRAFE_RIGHT)
+	{
+		if (world_map[(int)(g->w.pos_x + g->w.dir_y * g->w.move_speed)][(int)g->w.pos_y] == 0)
+			g->w.pos_x += g->w.dir_y * g->w.move_speed;
+		if (world_map[(int)g->w.pos_x][(int)(g->w.pos_y - g->w.dir_x * g->w.move_speed)] == 0)
+			g->w.pos_y -= g->w.dir_x * g->w.move_speed;
+	}
+
+	if (key == MOVE_UP || key == MOVE_W)
 	{
 		if (world_map[(int)(g->w.pos_x + g->w.dir_x * g->w.move_speed)][(int)g->w.pos_y] == 0)
 			g->w.pos_x += g->w.dir_x * g->w.move_speed;
@@ -69,7 +85,7 @@ int			ft_keys(int key, t_global *g)
 			g->w.pos_y += g->w.dir_y * g->w.move_speed;
 	}
 	//move backwards if no wall behind you
-	else if (key == MOVE_DOWN)
+	else if (key == MOVE_DOWN || key == MOVE_S)
 	{
 		if (world_map[(int)(g->w.pos_x - g->w.dir_x * g->w.move_speed)][(int)g->w.pos_y] == 0)
 			g->w.pos_x -= g->w.dir_x * g->w.move_speed;
@@ -93,6 +109,11 @@ int			ft_keys(int key, t_global *g)
 		pre_plane_x = g->w.plane_x;
 		g->w.plane_x = g->w.plane_x * cos(-g->w.rot_speed) - g->w.plane_y * sin(-g->w.rot_speed);
 		g->w.plane_y = pre_plane_x * sin(-g->w.rot_speed) + g->w.plane_y * cos(-g->w.rot_speed);
+	}
+	if (key == RELOAD)
+	{
+		g->w.plane_y = 0.66;
+		g->w.ampl_wall_high = 0;
 	}
 
 	ft_re_draw(g);

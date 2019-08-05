@@ -15,7 +15,7 @@
 void		globals_and_wolf_init(t_global *g)
 {
 	g->mlx_ptr = mlx_init();
-	g->win_ptr = mlx_new_window(g->mlx_ptr, WIDTH, HIGHT, "Fractol");
+	g->win_ptr = mlx_new_window(g->mlx_ptr, WIDTH, HIGHT, "Wolf3D");
 	g->img_ptr = mlx_new_image(g->mlx_ptr, IMG_WIDTH, IMG_HIGHT);
 	g->adr = mlx_get_data_addr(g->img_ptr, &g->bpp, &g->size_line, &g->endian);
 	ft_bzero(&g->w, sizeof(g->w));
@@ -25,11 +25,12 @@ void		globals_and_wolf_init(t_global *g)
 	g->w.dir_y = 0; //initial direction vector
 	g->w.plane_x = 0;
 	g->w.plane_y = 0.66; //the 2d raycaster version of camera plane
+	g->w.ampl_wall_high = 0;
 	g->w.frame_time = 0.02;
 	g->w.move_speed = g->w.frame_time * 5.0; //the constant value is in squares/second
 	g->w.rot_speed = g->w.frame_time * 3.0; //the constant value is in radians/second
 
-
+	ft_printf("globals_and_wolf_init\n");
 
 }
 
@@ -83,7 +84,7 @@ int			main(void)
 	globals_and_wolf_init(&g);
 
 
-	ft_draw(&g, &g.w);
-	system("leaks fractol > leaks");
+	ft_draw(&g);
+	system("leaks wolf3d > leaks");
 	return (0);
 }

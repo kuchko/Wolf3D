@@ -20,11 +20,11 @@
 # include <pthread.h>
 # include <math.h>
 
-# define WIDTH 1600
-# define HIGHT 1000
+# define WIDTH 1200
+# define HIGHT 800
 
-# define IMG_WIDTH 800
-# define IMG_HIGHT 500
+# define IMG_WIDTH 1200
+# define IMG_HIGHT 800
 # define MAP_WIDTH 24
 # define MAP_HIGHT 24
 
@@ -44,6 +44,10 @@
 # define MOVE_DOWN 125
 # define ROT_LEFT 123
 # define ROT_RIGHT 124
+# define MOVE_W 13
+# define MOVE_S 1
+# define STRAFE_LEFT 0
+# define STRAFE_RIGHT 2
 # define COLOR_PLUS 30
 # define COLOR_MINUS 33
 # define ALPHA_PLUS 47
@@ -116,7 +120,7 @@ typedef struct	s_wolf
 	double move_speed; //the constant value is in squares/second
 	double rot_speed;
 
-
+	double ampl_wall_high;
 
 }				t_wolf;
 
@@ -148,8 +152,8 @@ void		globals_and_wolf_init(t_global *g);
 
 void			ft_draw_menu(t_global *g);
 
-int				ft_draw(t_global *g, t_wolf *w);
-// void			draw_fractol(t_global *g);
+int				ft_draw(t_global *g);
+
 
 
 void			ft_putpixel(t_global *f, int x, int y, int color);
