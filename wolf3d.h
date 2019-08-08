@@ -27,6 +27,8 @@
 # define IMG_HIGHT 800
 # define MAP_WIDTH 24
 # define MAP_HIGHT 24
+# define TEX_WIDTH 64
+# define TEX_HIGHT 64
 
 
 # define TEXT_OFFSET 550
@@ -38,8 +40,8 @@
 # define ZOOM_OUT 5
 # define CENTER_ZOOM_IN 24
 # define CENTER_ZOOM_OUT 27
-# define ITER_PLUS 69
-# define ITER_MINUS 78
+# define SPEED_PLUS 69
+# define SPEED_MINUS 78
 # define MOVE_UP 126
 # define MOVE_DOWN 125
 # define ROT_LEFT 123
@@ -53,35 +55,30 @@
 # define ALPHA_PLUS 47
 # define ALPHA_MINUS 43
 # define RELOAD 36
+# define SPACE 49
 # define THREADS 8
 
 extern	int world_map[MAP_WIDTH][MAP_HIGHT];
-//  = {
-// 		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-// 		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-// 		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-// 		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-// 		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-// 	};
+
+typedef struct	s_keys
+{
+	int			esc;
+	int			move_forward;
+	int			move_back;
+	int			strafe_left;
+	int			strafe_right;
+	int			rot_left;
+	int			rot_right;
+
+	int			shift;
+	int			ctrl;
+	int			space;
+	int			enter;
+
+	int			plus;
+	int			minus;
+
+}				t_keys;
 
 
 typedef struct	s_wolf
@@ -122,7 +119,23 @@ typedef struct	s_wolf
 
 	double ampl_wall_high;
 
+	/// mechanic
+
+	double friction_speed;
+
+	//// texturizing
+	// unsigned int buff[IMG_HIGHT][IMG_WIDTH]; // y-coordinate first because it works per scanline
+
+	int	 text_num; //1 subtracted from it so that texture 0 can be used!
+	void		*tex_mlx_img[9];
+	int			*textures[9];
+	// t_mlx_data	tex[9];
+	// unsigned int textures[8][IMG_HIGHT * IMG_WIDTH];
+
+	int		tex_flag;
+
 }				t_wolf;
+
 
 typedef struct	s_global
 {
@@ -135,7 +148,7 @@ typedef struct	s_global
 	int			endian;
 
 	t_wolf		w;
-
+	t_keys		k;
 
 	pthread_t	threads[THREADS];
 	int			xstart;
@@ -148,7 +161,7 @@ typedef struct	s_global
 
 
 
-void		globals_and_wolf_init(t_global *g);
+void			globals_and_wolf_init(t_global *g);
 
 void			ft_draw_menu(t_global *g);
 
@@ -159,9 +172,15 @@ int				ft_draw(t_global *g);
 void			ft_putpixel(t_global *f, int x, int y, int color);
 int				change_color_rgb(int color, int s_x, int s_y, int alfa_step);
 void			ft_print_color(int color);
-void	ft_put_v_line(t_global *g, int x, int color);
+void			ft_put_v_line(t_global *g, int x, int color);
+void			ft_put_buff(t_global *g);
 
-int				ft_keys(int key, t_global *g);
+
+int			ft_keys(t_keys *k, t_global *g);
+// int				ft_keys(int key, t_global *g);
+
+int				ft_keys_press(int key, t_global *g);
+int				ft_keys_unpress(int key, t_global *g);
 
 int				ft_mouse_press(int key, int x, int y, t_global *g);
 int				ft_mouse_release(int key, int x, int y, t_global *g);

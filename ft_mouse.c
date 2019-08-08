@@ -47,7 +47,8 @@ int		ft_mouse_press(int key, int x, int y, t_global *g)
 	// 	g->fr.x_pre = x;
 	// 	g->fr.y_pre = y;
 	// }
-	ft_re_draw(g);
+
+	// ft_re_draw(g);
 	return (0);
 }
 

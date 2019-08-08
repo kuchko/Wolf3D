@@ -35,7 +35,7 @@ INC = $(INC_DIR)libft.a
 INC_DIR = libft/
 INCLUDES = $(INC_DIR)inc/
 INC_FLAGS = -L $(INC_DIR) -lft
-HEADER_FLAGS =	-I $(INCLUDES) -I fractol.h
+HEADER_FLAGS =	-I $(INCLUDES) -I wolf3d.h
 
 
 all: $(NAME)

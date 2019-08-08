@@ -61,3 +61,22 @@ void	ft_put_v_line(t_global *g, int x, int color)
 		ft_putpixel(g, x, y++, color);
 	// ft_printf("ft_put_v_line x = %d; y = {%d,%d}; %x \n", x, g->w.line_start, y--, color);
 }
+
+// void	ft_put_buff(t_global *g)
+// {
+// 	int y;
+// 	int x;
+
+// 	y = -1;
+// 	while(++y < IMG_HIGHT)
+// 	{
+// 		x = -1;
+// 		while(++x < IMG_WIDTH)
+// 		{
+// 			ft_putpixel(g, x, y, g->w.buff[y][x]);
+// 		}
+// 			// ft_print_color(g->w.buff[y][x]);
+// 	}
+
+// 	// ft_printf("ft_put_v_line x = %d; y = {%d,%d}; %x \n", x, g->w.line_start, y--, color);
+// }
