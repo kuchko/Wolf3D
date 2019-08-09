@@ -43,13 +43,14 @@ void	ft_threads(t_global *g)
 
 int		ft_re_draw(t_global *g)
 {
+	ft_printf("ft_re_draw\n");
 	// ft_threads(g);
 	// ft_bzero(g->adr, sizeof(g->adr));
 	// mlx_clear_window(g->mlx_ptr, g->win_ptr);
 	mlx_destroy_image(g->mlx_ptr, g->img_ptr);
 	g->img_ptr = mlx_new_image(g->mlx_ptr, IMG_WIDTH, IMG_HIGHT);
-	draw_wolf3d(g, &g->w);
 	ft_keys(&g->k, g);
+	draw_wolf3d(g, &g->w);
 	mlx_put_image_to_window(g->mlx_ptr, g->win_ptr, g->img_ptr, 0, 0);
 	return (0);
 }
@@ -60,7 +61,7 @@ void	draw_wolf3d(t_global *g, t_wolf *w)
 {
 	int x;
 
-	// ft_printf("draw_wolf3d\n");
+	ft_printf("draw_wolf3d\n");
 	x = -1;
 	while(++x < IMG_WIDTH)
 	{
@@ -173,46 +174,47 @@ void	draw_wolf3d(t_global *g, t_wolf *w)
 		//texturing calculations
 		w->text_num = world_map[w->map_x][w->map_y] - 1; //1 subtracted from it so that texture 0 can be used!
 
-		//calculate value of wall_x
-		double wall_x; //where exactly the wall was hit
+		//calculate value of w->wall_x
+		// double w->wall_x; //where exactly the wall was hit
 		if (w->side == 0)
-			wall_x = w->pos_y + w->p_wall_dist * w->ray_dir_y;
+			w->wall_x = w->pos_y + w->p_wall_dist * w->ray_dir_y;
 		else
-			wall_x = w->pos_x + w->p_wall_dist * w->ray_dir_x;
-		wall_x -= floor((wall_x));
+			w->wall_x = w->pos_x + w->p_wall_dist * w->ray_dir_x;
+		w->wall_x -= floor((w->wall_x));
 
 
 		///choose textures for sides
-		int texture_number;// = w->text_num;
 
-		if (w->text_num == 8)
-			texture_number = w->text_num;
-		else
+		if (w->text_num < 8)
 		{
 			if (w->side == 0)
-				texture_number = w->ray_dir_x > 0 ? 0 : 1;
+				w->text_num = w->ray_dir_x > 0 ? 0 : 1;
 			else
-				texture_number = w->ray_dir_y > 0 ? 2 : 3;
-			texture_number += w->tex_flag * 4;
+				w->text_num = w->ray_dir_y > 0 ? 2 : 3;
+			w->text_num += w->tex_change_flag * 4;
 		}
 
 		// ft_printf("texture_number = %d\n",texture_number);
 
 		//x coordinate on the texture
-		int tex_x = (int) (wall_x * (double)(TEX_WIDTH));
+		w->tex_x = (int) (w->wall_x * (double)(TEX_WIDTH));
 		if (w->side == 0 && w->ray_dir_x > 0)
-			tex_x = TEX_WIDTH - tex_x - 1;
+			w->tex_x = TEX_WIDTH - w->tex_x - 1;
 		if (w->side == 1 && w->ray_dir_y < 0)
-			tex_x = TEX_WIDTH - tex_x - 1;
+			w->tex_x = TEX_WIDTH - w->tex_x - 1;
 		// ft_printf("debug texturing2\n");
-		for(int y = w->line_start; y < w->line_end; y++)
-		{
-			int d = y * 256 - IMG_HIGHT * 128 + w->line_height * 128;  //256 and 128 factors to avoid floats
-			// TODO: avoid the division to speed this up
-			int tex_y = ((d * TEX_HIGHT) / w->line_height) / 256;
+		int y;
+		int d;
+		int color;
 
-			int color = w->textures[texture_number][TEX_HIGHT * tex_y + tex_x];
-			// int color = w->textures[w->text_num][TEX_HIGHT * tex_y + tex_x];
+		for(y = w->line_start; y < w->line_end; y++)
+		{
+			d = y * 256 - IMG_HIGHT * 128 + w->line_height * 128;  //256 and 128 factors to avoid floats
+			// TODO: avoid the division to speed this up
+			w->tex_y = ((d * TEX_HIGHT) / w->line_height) / 256;
+
+			color = w->textures[w->text_num][TEX_HIGHT * w->tex_y + w->tex_x];
+			// int color = w->textures[w->text_num][TEX_HIGHT * w->tex_y + tex_x];
 			if (w->side == 1)
 				color = (color >> 1) & 8355711;
 			ft_putpixel(g, x, y, color);
@@ -221,6 +223,83 @@ void	draw_wolf3d(t_global *g, t_wolf *w)
 			// 	ft_printf("ft_put_pixel tex = %d, {%d, %d}; ", w->text_num,  x, y);
 			// 	ft_print_color(color);
 			// }
+		}
+
+		/////////////////////FLOR AND CILING TEXTURING
+
+		//FLOOR CASTING
+		double flr_x_wall, flr_y_wall; //x, y position of the floor texel at the bottom of the wall
+
+		//4 different wall directions possible
+		if(w->side == 0 && w->ray_dir_x > 0)
+		{
+			flr_x_wall = w->map_x;
+			flr_y_wall = w->map_y + w->wall_x;
+		}
+		else if(w->side == 0 && w->ray_dir_x < 0)
+		{
+			flr_x_wall = w->map_x + 1.0;
+			flr_y_wall = w->map_y + w->wall_x;
+		}
+		else if(w->side == 1 && w->ray_dir_y > 0)
+		{
+			flr_x_wall = w->map_x + w->wall_x;
+			flr_y_wall = w->map_y;
+		}
+		else
+		{
+			flr_x_wall = w->map_x + w->wall_x;
+			flr_y_wall = w->map_y + 1.0;
+		}
+
+		double distWall, distPlayer, currentDist;
+
+		distWall = w->p_wall_dist;
+		distPlayer = 0.0;
+
+		if (w->line_end < 0) w->line_end = IMG_HIGHT; //becomes < 0 when the integer overflows
+
+		//draw the floor from drawEnd to the bottom of the screen
+		for(y = w->line_end + 1; y < IMG_HIGHT; y++)
+		{
+			currentDist = IMG_HIGHT / (2.0 * y - IMG_HIGHT); //you could make a small lookup table for this instead
+
+			double weight = (currentDist - distPlayer) / (distWall - distPlayer);
+
+			double currentFloorX = weight * flr_x_wall + (1.0 - weight) * w->pos_x;
+			double currentFloorY = weight * flr_y_wall + (1.0 - weight) * w->pos_y;
+
+			int floorTexX, floorTexY;
+			floorTexX = (int)(currentFloorX * TEX_WIDTH) % TEX_WIDTH;
+			floorTexY = (int)(currentFloorY * TEX_HIGHT) % TEX_HIGHT;
+
+			//floor
+			// buffer[y][x] = (texture[3][texWidth * floorTexY + floorTexX] >> 1) & 8355711;
+			//ceiling (symmetrical!)
+
+			color = (w->textures[0][TEX_WIDTH * floorTexY + floorTexX] >> 1) & 8355711;
+			ft_putpixel(g, x, y, color);
+
+		}
+
+		for(y = 0; y < w->line_start; y++)
+		{
+			//sky
+			double atan = (atan2(w->dir_y, w->dir_x) + M_PI) / M_PI / 2.0;// * 180.0 / M_PI;  0 -> 2pi ; 0 -> 1
+			// int sky_x = (int)((1.0 + 2.0 * atan / M_PI) * x * TEX_WIDTH / 4) / IMG_WIDTH;
+			// int sky_x = (int)(((double)x / (double)IMG_WIDTH + 4.0 - 4.0 * atan) / 4.0 * (double)TEX_WIDTH);
+			int sky_x = (int)(((double)x / (double)IMG_WIDTH - atan) / 4.0 * (double)TEX_WIDTH);
+			// int sky_x = (x * TEX_WIDTH) / IMG_WIDTH;
+			int sky_y = (2 * y * TEX_HIGHT) / IMG_HIGHT;
+
+			color = w->textures[8][TEX_WIDTH * sky_y + sky_x];
+			ft_putpixel(g, x, y, color);
+
+			if (x == 600)
+			{
+				ft_printf("ft_put_pixel tex = %d, {%d, %d};\t %f\t", w->text_num, x, y, atan);
+				ft_print_color(color);
+			}
 		}
 
 		// ft_printf("debug texturing3\n");
@@ -271,11 +350,11 @@ int			ft_draw(t_global *g)
 	mlx_hook(g->win_ptr, 2, 5, ft_keys_press, g);
 	mlx_hook(g->win_ptr, 3, 5, ft_keys_unpress, g);
 
-	mlx_hook(g->win_ptr, 4, 0, ft_mouse_press, g);
+	// mlx_hook(g->win_ptr, 4, 0, ft_mouse_press, g);
 	// mlx_hook(g->win_ptr, 5, 0, ft_mouse_release, g);
 	// mlx_hook(g->win_ptr, 6, 0, ft_mouse_move, g);
 	// mlx_expose_hook (g->win_ptr, ft_re_draw, g);
-	mlx_loop_hook(g->mlx_ptr, ft_re_draw, g);
+	// mlx_loop_hook(g->mlx_ptr, ft_re_draw, (void*)g);
 	mlx_loop(g->mlx_ptr);
 	return (0);
 }

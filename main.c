@@ -73,6 +73,7 @@ void		globals_and_wolf_init(t_global *g)
 	g->img_ptr = mlx_new_image(g->mlx_ptr, IMG_WIDTH, IMG_HIGHT);
 	g->adr = mlx_get_data_addr(g->img_ptr, &g->bpp, &g->size_line, &g->endian);
 	ft_bzero(&g->w, sizeof(g->w));
+	ft_bzero(&g->k, sizeof(g->k));
 	g->w.pos_x = 11;  //22
 	g->w.pos_y = 18;  //12 //x and y start position
 	g->w.dir_x = -1;
@@ -85,7 +86,6 @@ void		globals_and_wolf_init(t_global *g)
 	g->w.rot_speed = g->w.frame_time * 3.0; //the constant value is in radians/second
 
 	g->w.friction_speed = 0.0;
-	ft_printf("debug2\n");
 	ft_textures_init(g, &g->w);
 	ft_printf("globals_and_wolf_init\n");
 

@@ -129,10 +129,14 @@ typedef struct	s_wolf
 	int	 text_num; //1 subtracted from it so that texture 0 can be used!
 	void		*tex_mlx_img[9];
 	int			*textures[9];
-	// t_mlx_data	tex[9];
-	// unsigned int textures[8][IMG_HIGHT * IMG_WIDTH];
 
-	int		tex_flag;
+	double	wall_x;
+	int 	tex_x;
+	int		tex_y;
+
+	int		tex_change_flag;
+
+
 
 }				t_wolf;
 

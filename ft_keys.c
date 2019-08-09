@@ -14,6 +14,7 @@
 
 int			ft_keys_press(int key, t_global *g)
 {
+	ft_printf("ft_keys_press\n");
 	if (key == ESC)
 		g->k.esc = 1;
 	if (key == STRAFE_LEFT)
@@ -29,18 +30,23 @@ int			ft_keys_press(int key, t_global *g)
 	else if (key == ROT_RIGHT)
 		g->k.rot_right = 1;
 	if (key == SPACE)
+	{
 		g->k.space = 1;
+		g->w.tex_change_flag = g->w.tex_change_flag == 1 ? 0 : 1;
+	}
 	if (key == RELOAD)
 		g->k.enter = 1;
 	if (key == SPEED_PLUS)
 		g->k.plus = 1;
 	else if (key == SPEED_MINUS)
 		g->k.minus = 1;
+	ft_re_draw(g);
 	return (0);
 }
 
 int			ft_keys_unpress(int key, t_global *g)
 {
+	ft_printf("ft_keys_unpress\n");
 	if (key == ESC)
 		g->k.esc = 0;
 	if (key == STRAFE_LEFT)
@@ -63,6 +69,7 @@ int			ft_keys_unpress(int key, t_global *g)
 		g->k.plus = 0;
 	else if (key == SPEED_MINUS)
 		g->k.minus = 0;
+	ft_re_draw(g);
 	return (0);
 }
 
@@ -71,7 +78,8 @@ int			ft_keys(t_keys *k, t_global *g)
 	double pre_dir_x;
 	double pre_plane_x;
 
-	// if (g->w.tex_flag == 1)
+	ft_printf("ft_keys\n");
+	// if (g->w.tex_change_flag == 1)
 	// {
 	// 	if (world_map[(int)(g->w.pos_x + g->w.dir_x * g->w.friction_speed)][(int)g->w.pos_y] == 0)
 	// 		g->w.pos_x += g->w.dir_x * g->w.friction_speed;
@@ -125,7 +133,7 @@ int			ft_keys(t_keys *k, t_global *g)
 		g->w.plane_x = g->w.plane_x * cos(g->w.rot_speed) - g->w.plane_y * sin(g->w.rot_speed);
 		g->w.plane_y = pre_plane_x * sin(g->w.rot_speed) + g->w.plane_y * cos(g->w.rot_speed);
 	}
-	else if (k->rot_left)
+	else if (k->rot_right)
 	{
 		pre_dir_x = g->w.dir_x;
 		g->w.dir_x = g->w.dir_x * cos(-g->w.rot_speed) - g->w.dir_y * sin(-g->w.rot_speed);
@@ -134,10 +142,10 @@ int			ft_keys(t_keys *k, t_global *g)
 		g->w.plane_x = g->w.plane_x * cos(-g->w.rot_speed) - g->w.plane_y * sin(-g->w.rot_speed);
 		g->w.plane_y = pre_plane_x * sin(-g->w.rot_speed) + g->w.plane_y * cos(-g->w.rot_speed);
 	}
-	if (k->space)
-	{
-		g->w.tex_flag = g->w.tex_flag == 0 ? 1 : 0;
-	}
+
+	// g->w.tex_change_flag = k->space == 1 ? 1 : 0;
+	// if (k->space)
+	// 	g->w.tex_change_flag = g->w.tex_change_flag == 1 ? 0 : 1;
 
 	if (k->enter)
 	{
