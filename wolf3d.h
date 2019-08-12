@@ -29,19 +29,22 @@
 # define MAP_HIGHT 24
 # define TEX_WIDTH 64
 # define TEX_HIGHT 64
+# define SKY_TEX_WIDTH 2048
+# define SKY_TEX_HIGHT 512
 
 
 # define TEXT_OFFSET 550
 
 # define ESC 53
+# define SHIFT 257
 # define MOUSE_LEFT 1
 # define MOUSE_RIGHT 2
 # define ZOOM_IN 4
 # define ZOOM_OUT 5
 # define CENTER_ZOOM_IN 24
 # define CENTER_ZOOM_OUT 27
-# define SPEED_PLUS 69
-# define SPEED_MINUS 78
+# define PLUS 69
+# define MINUS 78
 # define MOVE_UP 126
 # define MOVE_DOWN 125
 # define ROT_LEFT 123
@@ -121,14 +124,14 @@ typedef struct	s_wolf
 
 	/// mechanic
 
-	double friction_speed;
+	double collision;
 
 	//// texturizing
 	// unsigned int buff[IMG_HIGHT][IMG_WIDTH]; // y-coordinate first because it works per scanline
 
 	int	 text_num; //1 subtracted from it so that texture 0 can be used!
-	void		*tex_mlx_img[9];
-	int			*textures[9];
+	void		*tex_mlx_img[10];
+	int			*textures[10];
 
 	double	wall_x;
 	int 	tex_x;

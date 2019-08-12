@@ -36,11 +36,13 @@ int			ft_keys_press(int key, t_global *g)
 	}
 	if (key == RELOAD)
 		g->k.enter = 1;
-	if (key == SPEED_PLUS)
-		g->k.plus = 1;
-	else if (key == SPEED_MINUS)
-		g->k.minus = 1;
-	ft_re_draw(g);
+	if (key == SHIFT)
+		g->k.shift = 1;
+	// if (key == SPEED_PLUS)
+	// 	g->k.plus = 1;
+	// else if (key == SPEED_MINUS)
+	// 	g->k.minus = 1;
+	// ft_re_draw(g);
 	return (0);
 }
 
@@ -65,11 +67,8 @@ int			ft_keys_unpress(int key, t_global *g)
 		g->k.space = 0;
 	if (key == RELOAD)
 		g->k.enter = 0;
-	if (key == SPEED_PLUS)
-		g->k.plus = 0;
-	else if (key == SPEED_MINUS)
-		g->k.minus = 0;
-	ft_re_draw(g);
+	if (key == SHIFT)
+		g->k.shift = 0;
 	return (0);
 }
 
@@ -111,9 +110,17 @@ int			ft_keys(t_keys *k, t_global *g)
 
 	if (k->move_forward)
 	{
-		if (world_map[(int)(g->w.pos_x + g->w.dir_x * g->w.move_speed)][(int)g->w.pos_y] == 0)
+		// if (world_map[(int)(g->w.pos_x + g->w.dir_x * g->w.move_speed + g->w.dir_x * g->w.collision)][(int)g->w.pos_y] == 0)
+		// 	g->w.pos_x += g->w.dir_x * g->w.move_speed;
+		// if(world_map[(int)g->w.pos_x][(int)(g->w.pos_y + g->w.dir_y * g->w.move_speed + g->w.dir_y * g->w.collision)] == 0)//  && g->w.p_wall_dist > 0.5)
+		// 	g->w.pos_y += g->w.dir_y * g->w.move_speed;
+
+		double dirx_sign = g->w.dir_x > 0 ? 1.0 : -1.0;
+		double diry_sign = g->w.dir_y > 0 ? 1.0 : -1.0;
+
+		if (world_map[(int)(g->w.pos_x + dirx_sign * g->w.collision)][(int)g->w.pos_y] == 0)
 			g->w.pos_x += g->w.dir_x * g->w.move_speed;
-		if(world_map[(int)g->w.pos_x][(int)(g->w.pos_y + g->w.dir_y * g->w.move_speed)] == 0)
+		if(world_map[(int)g->w.pos_x][(int)(g->w.pos_y + diry_sign * g->w.collision)] == 0)//  && g->w.p_wall_dist > 0.5)
 			g->w.pos_y += g->w.dir_y * g->w.move_speed;
 	}
 	//move backwards if no wall behind you
@@ -159,13 +166,15 @@ int			ft_keys(t_keys *k, t_global *g)
 		g->w.frame_time = 0.02;
 		g->w.move_speed = g->w.frame_time * 6.0; //the constant value is in squares/second
 		g->w.rot_speed = g->w.frame_time * 3.0; //the constant value is in radians/second
-		g->w.friction_speed = 0.0;
+		// g->w.friction_speed = 0.0;
 	}
+	g->w.move_speed = g->w.frame_time * (k->shift ? 2.0 : 6.0);
 
-	if (k->plus && g->w.move_speed < 1.0)
-		g->w.move_speed += g->w.frame_time * 2.0;
-	else if (k->minus && g->w.move_speed > 0.12)
-		g->w.move_speed -= g->w.frame_time * 2.0;
+
+	// if (k->plus && g->w.move_speed < 1.0)
+	// 	g->w.move_speed += g->w.frame_time * 2.0;
+	// else if (k->minus && g->w.move_speed > 0.12)
+	// 	g->w.move_speed -= g->w.frame_time * 2.0;
 
 	// ft_re_draw(g);
 	return (0);

@@ -260,7 +260,7 @@ void	draw_wolf3d(t_global *g, t_wolf *w)
 		if (w->line_end < 0) w->line_end = IMG_HIGHT; //becomes < 0 when the integer overflows
 
 		//draw the floor from drawEnd to the bottom of the screen
-		for(y = w->line_end + 1; y < IMG_HIGHT; y++)
+		for(y = w->line_end; y < IMG_HIGHT; y++)
 		{
 			currentDist = IMG_HIGHT / (2.0 * y - IMG_HIGHT); //you could make a small lookup table for this instead
 
@@ -282,25 +282,40 @@ void	draw_wolf3d(t_global *g, t_wolf *w)
 
 		}
 
+		//sky texturing
 		for(y = 0; y < w->line_start; y++)
 		{
-			//sky
-			double atan = (atan2(w->dir_y, w->dir_x) + M_PI) / M_PI / 2.0;// * 180.0 / M_PI;  0 -> 2pi ; 0 -> 1
-			// int sky_x = (int)((1.0 + 2.0 * atan / M_PI) * x * TEX_WIDTH / 4) / IMG_WIDTH;
-			// int sky_x = (int)(((double)x / (double)IMG_WIDTH + 4.0 - 4.0 * atan) / 4.0 * (double)TEX_WIDTH);
-			int sky_x = (int)(((double)x / (double)IMG_WIDTH - atan) / 4.0 * (double)TEX_WIDTH);
-			// int sky_x = (x * TEX_WIDTH) / IMG_WIDTH;
-			int sky_y = (2 * y * TEX_HIGHT) / IMG_HIGHT;
-
-			color = w->textures[8][TEX_WIDTH * sky_y + sky_x];
+			double atan = (atan2(w->ray_dir_y, w->ray_dir_x) + M_PI) / M_PI / 2.0;// * 180.0 / M_PI;  0 -> 2pi ; 0 -> 1
+			int sky_x = (int) (atan * (double)SKY_TEX_WIDTH);
+			int sky_y = (y * (double) SKY_TEX_HIGHT) / IMG_HIGHT;
+			color = w->textures[9][SKY_TEX_WIDTH * sky_y + sky_x];
 			ft_putpixel(g, x, y, color);
-
-			if (x == 600)
-			{
-				ft_printf("ft_put_pixel tex = %d, {%d, %d};\t %f\t", w->text_num, x, y, atan);
-				ft_print_color(color);
-			}
 		}
+
+		// for(y = 0; y < w->line_start; y++)
+		// {
+		// 	double atan = (atan2(w->ray_dir_y, w->ray_dir_x) + M_PI) / M_PI / 2.0;// * 180.0 / M_PI;  0 -> 2pi ; 0 -> 1
+		// 	int sky_x = (int) (atan * (double)TEX_WIDTH);
+		// 	int sky_y = (2 * y * TEX_HIGHT) / IMG_HIGHT;
+		// 	color = w->textures[8][TEX_WIDTH * sky_y + sky_x];
+		// 	ft_putpixel(g, x, y, color);
+		// }
+
+		//sky texturing
+		// for(y = 0; y < w->line_start; y++)
+		// {
+		// 	double atan = (atan2(w->dir_y, w->dir_x) + M_PI) / M_PI / 2.0;// * 180.0 / M_PI;  0 -> 2pi ; 0 -> 1
+		// 	int sky_x = (int)(((double)x / (double)IMG_WIDTH + 4.0 - 4.0 * atan) / 4.0 * (double)TEX_WIDTH);
+		// 	int sky_y = (2 * y * TEX_HIGHT) / IMG_HIGHT;
+		// 	color = w->textures[8][TEX_WIDTH * sky_y + sky_x];
+		// 	ft_putpixel(g, x, y, color);
+			// if (x == 600)
+			// {
+			// 	ft_printf("ft_put_pixel tex = %d, {%d, %d};\t %f\t", w->text_num, x, y, atan);
+			// 	ft_print_color(color);
+			// }
+		// }
+
 
 		// ft_printf("debug texturing3\n");
 	}
@@ -354,7 +369,7 @@ int			ft_draw(t_global *g)
 	// mlx_hook(g->win_ptr, 5, 0, ft_mouse_release, g);
 	// mlx_hook(g->win_ptr, 6, 0, ft_mouse_move, g);
 	// mlx_expose_hook (g->win_ptr, ft_re_draw, g);
-	// mlx_loop_hook(g->mlx_ptr, ft_re_draw, (void*)g);
+	mlx_loop_hook(g->mlx_ptr, ft_re_draw, (void*)g);
 	mlx_loop(g->mlx_ptr);
 	return (0);
 }

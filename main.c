@@ -20,6 +20,8 @@ void		ft_textures_init(t_global *g, t_wolf *w)
 	// w->textures = (int**)malloc(sizeof(int*) * 9);
 
 	size = TEX_HIGHT;
+	int sky_hight = SKY_TEX_HIGHT;
+	int sky_width = SKY_TEX_WIDTH;
 	w->tex_mlx_img[0] = mlx_xpm_file_to_image(g->mlx_ptr, "xpm/wood.xpm", &size, &size);
 	w->tex_mlx_img[1] = mlx_xpm_file_to_image(g->mlx_ptr, "xpm/greystone_1.xpm", &size, &size);
 	w->tex_mlx_img[2] = mlx_xpm_file_to_image(g->mlx_ptr, "xpm/redbrick.xpm", &size, &size);
@@ -29,6 +31,7 @@ void		ft_textures_init(t_global *g, t_wolf *w)
 	w->tex_mlx_img[6] = mlx_xpm_file_to_image(g->mlx_ptr, "xpm/unit_red.xpm", &size, &size);
 	w->tex_mlx_img[7] = mlx_xpm_file_to_image(g->mlx_ptr, "xpm/unit_1.xpm", &size, &size);
 	w->tex_mlx_img[8] = mlx_xpm_file_to_image(g->mlx_ptr, "xpm/unit_i.xpm", &size, &size);
+	w->tex_mlx_img[9] = mlx_xpm_file_to_image(g->mlx_ptr, "xpm/sky.xpm", &sky_width, &sky_hight);
 	w->textures[0] = (int*)mlx_get_data_addr(w->tex_mlx_img[0],	&g->bpp, &g->size_line, &g->endian);
 	w->textures[1] = (int*)mlx_get_data_addr(w->tex_mlx_img[1],	&g->bpp, &g->size_line, &g->endian);
 	w->textures[2] = (int*)mlx_get_data_addr(w->tex_mlx_img[2],	&g->bpp, &g->size_line, &g->endian);
@@ -38,6 +41,7 @@ void		ft_textures_init(t_global *g, t_wolf *w)
 	w->textures[6] = (int*)mlx_get_data_addr(w->tex_mlx_img[6],	&g->bpp, &g->size_line, &g->endian);
 	w->textures[7] = (int*)mlx_get_data_addr(w->tex_mlx_img[7],	&g->bpp, &g->size_line, &g->endian);
 	w->textures[8] = (int*)mlx_get_data_addr(w->tex_mlx_img[8],	&g->bpp, &g->size_line, &g->endian);
+	w->textures[9] = (int*)mlx_get_data_addr(w->tex_mlx_img[9],	&g->bpp, &g->size_line, &g->endian);
 
 	// int i;
 
@@ -85,8 +89,16 @@ void		globals_and_wolf_init(t_global *g)
 	g->w.move_speed = g->w.frame_time * 6.0; //the constant value is in squares/second
 	g->w.rot_speed = g->w.frame_time * 3.0; //the constant value is in radians/second
 
-	g->w.friction_speed = 0.0;
+	g->w.collision = 0.2;
 	ft_textures_init(g, &g->w);
+
+		double	pre_dir_x = g->w.dir_x;
+		g->w.dir_x = g->w.dir_x * cos(0.005) - g->w.dir_y * sin(0.005);
+		g->w.dir_y = pre_dir_x * sin(0.005) + g->w.dir_y * cos(0.005);
+		double	pre_plane_x = g->w.plane_x;
+		g->w.plane_x = g->w.plane_x * cos(0.005) - g->w.plane_y * sin(0.005);
+		g->w.plane_y = pre_plane_x * sin(0.005) + g->w.plane_y * cos(0.005);
+
 	ft_printf("globals_and_wolf_init\n");
 
 }
