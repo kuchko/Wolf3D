@@ -16,18 +16,24 @@ int		ft_mouse_press(int key, int x, int y, t_global *g)
 {
 	x = y;
 
-	if (key == ZOOM_IN && g->w.plane_y > 0.3)
+	if (key == ZOOM_IN && g->w.collision < 10.0)
 	{
-		// g->w.ampl_wall_high -= 0.02;
-		g->w.plane_y -= 0.02;
-		ft_printf("A %f, PL %f\n", g->w.ampl_wall_high, g->w.plane_y);
+		g->w.collision += 0.02;
+		ft_printf("collision = %f\n", g->w.collision);
 	}
-	if (key == ZOOM_OUT && g->w.plane_y < 1.0)
+	if (key == ZOOM_OUT && g->w.collision > 0.1)
 	{
-		// g->w.ampl_wall_high += 0.02;
-		g->w.plane_y += 0.02;
-		ft_printf("A %f, PL %f\n", g->w.ampl_wall_high, g->w.plane_y);
+		g->w.collision -= 0.02;
+		ft_printf("collision = %f\n", g->w.collision);
 	}
+	// if (key == ZOOM_IN && g->w.plane_y > 0.3)
+	// {
+	// 	g->w.plane_y -= 0.02;
+	// }
+	// if (key == ZOOM_OUT && g->w.plane_y < 1.0)
+	// {
+	// 	g->w.plane_y += 0.02;
+	// }
 	// if (key == ZOOM_IN || key == ZOOM_OUT)
 	// {
 	// 	sign = key == ZOOM_IN ? 1.0 : -1.0;

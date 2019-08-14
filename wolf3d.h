@@ -86,61 +86,53 @@ typedef struct	s_keys
 
 typedef struct	s_wolf
 {
-	double pos_x;
-	double pos_y;
-	double dir_x;
-	double dir_y;
-	double plane_x;
-	double plane_y;
-	//ray
-	double camera_x; //x-coordinate in camera space  // [-1, 1] is apmlifyer for vector plane
-	double ray_dir_x;
-	double ray_dir_y;
-	//which box of the map we're in
-	int map_x;
-	int map_y;
-	//length of ray from current position to next x or y-side
-	double side_dist_x;
-	double side_dist_y;
-	//length of ray from one x or y-side to next x or y-side // from pythagor
-	double delt_dist_x;
-	double delt_dist_y;
-	double p_wall_dist;
-	//what direction to step in x or y-direction (either +1 or -1)
-	int step_x;
-	int step_y;
-	int hit; //was there a wall hit?
-	int side; //was a NS or a EW wall hit?
+	double		pos_x;
+	double		pos_y;
+	double		dir_x;
+	double		dir_y;
+	double		dir_x_sign;
+	double		dir_y_sign;
+	double		plane_x;
+	double		plane_y;
+	double		camera_x;
+	double		ray_dir_x;
+	double		ray_dir_y;
+	int			map_x;
+	int			map_y;
+	double		side_dst_x;
+	double		side_dst_y;
 
-	int line_height;
-	int line_start;
-	int line_end;
+	double		p_wall_dst;
+	double		delt_dst_x;
+	double		delt_dst_y;
+	int			step_x;
+	int			step_y;
+	int			side;
+	int			hit;
 
-	double frame_time;
-	double move_speed; //the constant value is in squares/second
-	double rot_speed;
+	int			line_height;
+	int			line_start;
+	int			line_end;
 
-	double ampl_wall_high;
+	double		frame_tme;
+	double		move_spd;
+	double		rot_spd;
 
-	/// mechanic
-
-	double collision;
-
-	//// texturizing
-	// unsigned int buff[IMG_HIGHT][IMG_WIDTH]; // y-coordinate first because it works per scanline
-
-	int	 text_num; //1 subtracted from it so that texture 0 can be used!
+	int			tex_mode;
+	int			text_num;
 	void		*tex_mlx_img[10];
 	int			*textures[10];
+	double		wall_x;
+	int			tex_x;
+	int			tex_y;
 
-	double	wall_x;
-	int 	tex_x;
-	int		tex_y;
+	double		flr_x_wall;
+	double		flr_y_wall;
+	double		dist_wall;
+	double		dist_player;
+	double		crnt_dist;
 
-	int		tex_change_flag;
-
-
-
+	double		collision;
 }				t_wolf;
 
 
@@ -156,12 +148,6 @@ typedef struct	s_global
 
 	t_wolf		w;
 	t_keys		k;
-
-	pthread_t	threads[THREADS];
-	int			xstart;
-	int			xend;
-	int			ystart;
-	int			yend;
 }				t_global;
 
 
@@ -169,6 +155,7 @@ typedef struct	s_global
 
 
 void			globals_and_wolf_init(t_global *g);
+void			wolf_init(t_global *g);
 
 void			ft_draw_menu(t_global *g);
 
@@ -182,8 +169,10 @@ void			ft_print_color(int color);
 void			ft_put_v_line(t_global *g, int x, int color);
 void			ft_put_buff(t_global *g);
 
-
-int			ft_keys(t_keys *k, t_global *g);
+void	ft_rotate(t_wolf *w, double angle);
+void	ft_move_strate(t_global *g, double dir_forward);
+void	ft_move_sides(t_global *g, double dir_right);
+int				ft_keys(t_keys *k, t_global *g);
 // int				ft_keys(int key, t_global *g);
 
 int				ft_keys_press(int key, t_global *g);
@@ -193,7 +182,6 @@ int				ft_mouse_press(int key, int x, int y, t_global *g);
 int				ft_mouse_release(int key, int x, int y, t_global *g);
 int				ft_mouse_move(int x, int y, t_global *g);
 
-void			ft_threads(t_global *g);
 int				ft_re_draw(t_global *g);
 
 void			draw_wolf3d(t_global *g, t_wolf *w);
