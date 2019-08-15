@@ -16,6 +16,6 @@
 void		ft_error(char *s)
 {
 	ft_printf("%s", s);
-	system("leaks fractol > leaks");
+	system("leaks wolf3d > leaks");
 	exit(0);
 }

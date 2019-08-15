@@ -76,7 +76,7 @@ void ft_dda_hit(t_wolf *w)
 			w->map_y += w->step_y;
 			w->side = 1;
 		}
-		world_map[w->map_x][w->map_y] > 0 ? w->hit = 1 : 0;
+		w->map[w->map_x][w->map_y] > 0 ? w->hit = 1 : 0;
 	}
 	w->p_wall_dst = w->side == 0 ? (w->map_x - w->pos_x + (1 - w->step_x) / 2)
 	/ w->ray_dir_x : (w->map_y - w->pos_y + (1 - w->step_y) / 2) / w->ray_dir_y;
@@ -94,7 +94,7 @@ void	ft_colorized_environment(t_global *g, t_wolf *w, int x)
 	int	clr;
 	int y;
 
-	if (world_map[w->map_x][w->map_y] == 1)
+	if (w->map[w->map_x][w->map_y] == 1)
 	{
 		if (w->side == 0)
 			clr = w->ray_dir_x > 0 ? 0xFF0000 : 0x00FF00;
@@ -116,7 +116,7 @@ void	ft_colorized_environment(t_global *g, t_wolf *w, int x)
 
 void	ft_texture_prepare(t_wolf *w)
 {
-	w->text_num = world_map[w->map_x][w->map_y] - 1;
+	w->text_num = w->map[w->map_x][w->map_y] - 1;
 	if (w->text_num == 0)
 	{
 		if (w->side == 0)

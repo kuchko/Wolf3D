@@ -48,89 +48,42 @@ void		ft_textures_init(t_global *g, t_wolf *w)
 void		wolf_init(t_global *g)
 {
 
-	g->w.pos_x = 11;  //22
-	g->w.pos_y = 18;  //12 //x and y start position
+	// g->w.pos_x = 11.5;
+	// g->w.pos_y = 18.5;
+	g->w.pos_x = 0.0;
+	g->w.pos_y = 0.0;
 	g->w.dir_x = -1;
-	g->w.dir_y = 0; //initial direction vector
+	g->w.dir_y = 0;
 	g->w.plane_x = 0;
-	g->w.plane_y = 0.66; //the 2d raycaster version of camera plane
+	g->w.plane_y = 0.66;
 	g->w.frame_tme = 0.02;
-	g->w.move_spd = g->w.frame_tme * 4.0; //the constant value is in squares/second
-	g->w.rot_spd = g->w.frame_tme * 2.0; //the constant value is in radians/second
+	g->w.move_spd = g->w.frame_tme * 4.0;
+	g->w.rot_spd = g->w.frame_tme * 2.0;
 	g->w.tex_mode = 1;
 	g->w.collision = 0.1;
-	ft_rotate(&g->w, 0.001);
-
-		// double	pre_dir_x = g->w.dir_x;
-		// g->w.dir_x = g->w.dir_x * cos(0.005) - g->w.dir_y * sin(0.005);
-		// g->w.dir_y = pre_dir_x * sin(0.005) + g->w.dir_y * cos(0.005);
-		// double	pre_plane_x = g->w.plane_x;
-		// g->w.plane_x = g->w.plane_x * cos(0.005) - g->w.plane_y * sin(0.005);
-		// g->w.plane_y = pre_plane_x * sin(0.005) + g->w.plane_y * cos(0.005);
-
-	// ft_printf("globals_and_wolf_init\n");
-
+	ft_rotate(&g->w, M_PI + M_PI_4 + 0.001);
 }
-
-// static void	ft_input_select(int argc, char **argv, t_global *g)
-// {
-// 	if (argc == 1)
-// 	{
-// 		ft_printf("usage:	wolf3d map_file\n");
-// 		ft_error("map_file - is rectangualr shaped map max [100,100] sized \n");
-// 	}
-// }
-
-// int			main(int argc, char **argv)
-
-
-int world_map[MAP_WIDTH][MAP_HIGHT] = {
-	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,1,0,1,0,1,0,0,0,1},
-	{1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,1},
-	{1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,1,1,0,1,1,0,0,0,0,1,0,1,0,1,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,2,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,0,0,0,0,2,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-};
 
 // int world_map[MAP_WIDTH][MAP_HIGHT] = {
 // 	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 // 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 // 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 // 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 	{1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-// 	{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 	{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-// 	{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 	{1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
+// 	{1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,1,0,1,0,1,0,0,0,1},
+// 	{1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+// 	{1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,1},
+// 	{1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+// 	{1,0,0,0,0,0,1,1,0,1,1,0,0,0,0,1,0,1,0,1,0,0,0,1},
 // 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 // 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+// 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
 // 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 	{1,0,0,0,0,9,0,8,0,7,0,6,0,5,0,4,0,3,0,2,0,1,0,1},
+// 	{1,0,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,2,0,1},
 // 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 // 	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 // 	{1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 // 	{1,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-// 	{1,1,0,0,0,0,3,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+// 	{1,1,0,0,0,0,2,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 // 	{1,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 // 	{1,1,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
 // 	{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -138,19 +91,129 @@ int world_map[MAP_WIDTH][MAP_HIGHT] = {
 // 	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 // };
 
+static int	ft_valid_symbols(t_list *lst, int y_range)
+{
+	int	i;
+	int	j;
 
-int			main(void)
+	i = 0;
+	while (lst)
+	{
+		j = 0;
+		while (((char*)lst->content)[j])
+			if (ft_strchr("012,", ((char*)lst->content)[j++]) == NULL)
+				return (0);
+		lst = lst->next;
+		i++;
+	}
+	if (i == y_range)
+		return (1);
+	return (0);
+}
+
+static int	ft_read_to_list(t_list **start, int fd)
+{
+	t_list	*lst;
+	t_list	*tmp;
+	char	*l;
+	int		i;
+
+	i = 0;
+	while (get_next_line(fd, &l) > 0 && ++i)
+	{
+		if (*start == NULL)
+		{
+			if ((*start = ft_lstnew(l, ft_strlen(l) + 1)) == NULL)
+				return (0);
+			lst = *start;
+		}
+		else
+		{
+			if ((tmp = ft_lstnew(l, ft_strlen(l) + 1)) == NULL)
+				return (0);
+			lst->next = tmp;
+			lst = tmp;
+		}
+		free(l);
+	}
+	i > 0 ? free(l) : 0;
+	return (i);
+}
+
+void		ft_read(t_global *g, t_list **start, int argc, char **argv)
+{
+	int		fd;
+
+	*start = NULL;
+	if (argc == 1)
+		ft_error("usage:	wolf3D map_file\n");
+	if (argc > 2)
+		ft_error("wolf3D must have only one map_file\n");
+	if ((fd = open(argv[1], O_DIRECTORY)) > 0)
+		ft_error("open directory is invalid\n");
+	if ((fd = open(argv[1], O_RDONLY)) == -1)
+		ft_error("open map_file error\n");
+	if ((g->w.map_size_y = ft_read_to_list(start, fd)) == 0)
+		ft_error("invalid file content\n");
+	close(fd);
+	if (g->w.map_size_y > 100)
+		ft_error("map is too big\n");
+	if (ft_valid_symbols(*start, g->w.map_size_y) == 0)
+		ft_error("invalid symbols in file\n");
+	if (!ft_validate_map(*start, &g->w))
+		ft_error("map error. coordinates might be out of range.\n");
+}
+
+void	ft_show_list(t_list *lst)
+{
+	while (lst)
+	{
+		ft_printf("%s\n", lst->content);
+		lst = lst->next;
+	}
+}
+
+void	ft_show_map(t_wolf *w)
+{
+	int	x;
+	int y;
+
+	y = -1;
+	ft_printf("map[%d][%d] - position(%f,%f):\n", w->map_size_y, w->map_size_x, w->pos_y, w->pos_x);
+	while (++y < w->map_size_y)
+	{
+		x = -1;
+		while (++x < w->map_size_x)
+		{
+			ft_printf("%d ", w->map[y][x]);
+		}
+		ft_printf("\n");
+	}
+}
+
+
+int			main(int argc, char **argv)
 {
 	t_global	g;
+	t_list	*start;
+
+
+	ft_bzero(&g.w, sizeof(g.w));
+	ft_bzero(&g.k, sizeof(g.k));
+	wolf_init(&g);
+
+	ft_read(&g, &start, argc, argv);
+
+	ft_show_list(start);
+	ft_show_map(&g.w);
+
+
 
 	g.mlx_ptr = mlx_init();
 	g.win_ptr = mlx_new_window(g.mlx_ptr, WIDTH, HIGHT, "Wolf3D");
 	g.img_ptr = mlx_new_image(g.mlx_ptr, IMG_WIDTH, IMG_HIGHT);
 	g.adr = mlx_get_data_addr(g.img_ptr, &g.bpp, &g.size_line, &g.endian);
-	ft_bzero(&g.w, sizeof(g.w));
-	ft_bzero(&g.k, sizeof(g.k));
 	ft_textures_init(&g, &g.w);
-	wolf_init(&g);
 
 	ft_draw(&g);
 	system("leaks wolf3d > leaks");

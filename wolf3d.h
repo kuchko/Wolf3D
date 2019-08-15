@@ -16,17 +16,18 @@
 
 # include "ft_printf.h"
 # include "libft.h"
+# include "get_next_line.h"
 # include <mlx.h>
-# include <pthread.h>
 # include <math.h>
+# include <fcntl.h>
 
 # define WIDTH 1200
 # define HIGHT 800
 
 # define IMG_WIDTH 1200
 # define IMG_HIGHT 800
-# define MAP_WIDTH 24
-# define MAP_HIGHT 24
+// # define MAP_WIDTH 24
+// # define MAP_HIGHT 24
 # define TEX_WIDTH 64
 # define TEX_HIGHT 64
 # define SKY_TEX_WIDTH 2048
@@ -61,7 +62,7 @@
 # define SPACE 49
 # define THREADS 8
 
-extern	int world_map[MAP_WIDTH][MAP_HIGHT];
+// extern	int world_map[MAP_WIDTH][MAP_HIGHT];
 
 typedef struct	s_keys
 {
@@ -86,6 +87,10 @@ typedef struct	s_keys
 
 typedef struct	s_wolf
 {
+	int			map_size_y;
+	int			map_size_x;
+	int			**map;
+
 	double		pos_x;
 	double		pos_y;
 	double		dir_x;
@@ -152,7 +157,7 @@ typedef struct	s_global
 
 
 
-
+int			ft_validate_map(t_list *lst, t_wolf *w);
 
 void			globals_and_wolf_init(t_global *g);
 void			wolf_init(t_global *g);

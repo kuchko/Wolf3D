@@ -17,7 +17,7 @@ OBJ_DIR = ./obj/
 CC = gcc
 CC_FLAGS = -Wall -Wextra -Werror
 
-SOURCES = main.c ft_menu.c ft_draw.c \
+SOURCES = main.c ft_menu.c ft_draw.c ft_valid.c\
 			ft_puts.c ft_keys.c ft_mouse.c
 
 OBJECTS = $(addprefix $(OBJ_DIR), $(SOURCES:.c=.o))
