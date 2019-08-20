@@ -17,8 +17,8 @@ OBJ_DIR = ./obj/
 CC = gcc
 CC_FLAGS = -Wall -Wextra -Werror
 
-SOURCES = main.c ft_menu.c ft_draw.c ft_valid.c\
-			ft_puts.c ft_keys.c ft_mouse.c
+SOURCES = main.c ft_read.c ft_valid.c\
+			ft_draw.c ft_draw_dda.c ft_draw_with_textures.c ft_puts.c ft_keys.c
 
 OBJECTS = $(addprefix $(OBJ_DIR), $(SOURCES:.c=.o))
 
@@ -41,7 +41,7 @@ HEADER_FLAGS =	-I $(INCLUDES) -I wolf3d.h
 all: $(NAME)
 
 $(NAME): $(INC) $(OBJECTS)
-	# $(CC) $(CC_FLAGS) $(OBJECTS) $(INC_FLAGS) $(LIBX_INC_FLAGS) $(LIBX_HEADER_FLAGS) $(LIBX_FRAMEWORKS) -o $(NAME)
+#	$(CC) $(CC_FLAGS) $(OBJECTS) $(INC_FLAGS) $(LIBX_INC_FLAGS) $(LIBX_HEADER_FLAGS) $(LIBX_FRAMEWORKS) -o $(NAME)
 	$(CC) $(CC_FLAGS) $(OBJECTS) $(INC_FLAGS) $(LIBX_FRAMEWORKS) -o $(NAME)
 $(INC):
 	make -C $(INC_DIR)

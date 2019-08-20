@@ -1,13 +1,12 @@
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fractol.h                                          :+:      :+:    :+:   */
+/*   wolf3d.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okuchko <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/25 17:18:56 by okuchko           #+#    #+#             */
-/*   Updated: 2019/07/25 17:19:05 by okuchko          ###   ########.fr       */
+/*   Created: 2019/08/20 17:43:02 by okuchko           #+#    #+#             */
+/*   Updated: 2019/08/20 17:43:05 by okuchko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +20,16 @@
 # include <math.h>
 # include <fcntl.h>
 
+# define MTI mlx_xpm_file_to_image
+
 # define WIDTH 1200
 # define HIGHT 800
-
 # define IMG_WIDTH 1200
 # define IMG_HIGHT 800
-// # define MAP_WIDTH 24
-// # define MAP_HIGHT 24
 # define TEX_WIDTH 64
 # define TEX_HIGHT 64
 # define SKY_TEX_WIDTH 2048
 # define SKY_TEX_HIGHT 512
-
-
-# define TEXT_OFFSET 550
 
 # define ESC 53
 # define SHIFT 257
@@ -62,8 +57,6 @@
 # define SPACE 49
 # define THREADS 8
 
-// extern	int world_map[MAP_WIDTH][MAP_HIGHT];
-
 typedef struct	s_keys
 {
 	int			esc;
@@ -84,7 +77,6 @@ typedef struct	s_keys
 
 }				t_keys;
 
-
 typedef struct	s_wolf
 {
 	int			map_size_y;
@@ -93,6 +85,8 @@ typedef struct	s_wolf
 
 	double		pos_x;
 	double		pos_y;
+	double		pos_start_x;
+	double		pos_start_y;
 	double		dir_x;
 	double		dir_y;
 	double		dir_x_sign;
@@ -138,8 +132,8 @@ typedef struct	s_wolf
 	double		crnt_dist;
 
 	double		collision;
+	int			win_play;
 }				t_wolf;
-
 
 typedef struct	s_global
 {
@@ -155,40 +149,35 @@ typedef struct	s_global
 	t_keys		k;
 }				t_global;
 
-
-
-int			ft_validate_map(t_list *lst, t_wolf *w);
-
 void			globals_and_wolf_init(t_global *g);
 void			wolf_init(t_global *g);
 
-void			ft_draw_menu(t_global *g);
+void			ft_read(t_global *g, t_list **start, int argc, char **argv);
+void			ft_show_list(t_list *lst);
+void			ft_show_map(t_wolf *w);
 
+int				ft_validate_map(t_list *lst, t_wolf *w);
+
+void			ft_play_win_sound(t_wolf *w);
 int				ft_draw(t_global *g);
 
+void			ft_ray_and_side_distance_calc(int x, t_wolf *w);
+void			ft_dda_hit(t_wolf *w);
+void			ft_colorized_environment(t_global *g, t_wolf *w, int x);
 
+void			ft_texture_prepare(t_wolf *w);
+void			ft_draw_sky_and_boxes(t_global *g, t_wolf *w, int x);
+void			ft_cilling_prepare(t_wolf *w);
+void			ft_draw_cilling(t_global *g, t_wolf *w, int x);
 
 void			ft_putpixel(t_global *f, int x, int y, int color);
 int				change_color_rgb(int color, int s_x, int s_y, int alfa_step);
 void			ft_print_color(int color);
-void			ft_put_v_line(t_global *g, int x, int color);
-void			ft_put_buff(t_global *g);
 
-void	ft_rotate(t_wolf *w, double angle);
-void	ft_move_strate(t_global *g, double dir_forward);
-void	ft_move_sides(t_global *g, double dir_right);
+void			ft_rotate(t_wolf *w, double angle);
+void			ft_move_all_sides(t_global *g);
 int				ft_keys(t_keys *k, t_global *g);
-// int				ft_keys(int key, t_global *g);
-
 int				ft_keys_press(int key, t_global *g);
 int				ft_keys_unpress(int key, t_global *g);
-
-int				ft_mouse_press(int key, int x, int y, t_global *g);
-int				ft_mouse_release(int key, int x, int y, t_global *g);
-int				ft_mouse_move(int x, int y, t_global *g);
-
-int				ft_re_draw(t_global *g);
-
-void			draw_wolf3d(t_global *g, t_wolf *w);
 
 #endif

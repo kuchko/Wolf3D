@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: okuchko <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/25 17:20:42 by okuchko           #+#    #+#             */
-/*   Updated: 2019/07/25 17:20:44 by okuchko          ###   ########.fr       */
+/*   Created: 2019/08/20 17:41:30 by okuchko           #+#    #+#             */
+/*   Updated: 2019/08/20 17:41:31 by okuchko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf3d.h"
 
-void	ft_rotate(t_wolf *w, double angle)
+void		ft_rotate(t_wolf *w, double angle)
 {
 	double pre_dir_x;
 	double pre_plane_x;
@@ -25,12 +25,12 @@ void	ft_rotate(t_wolf *w, double angle)
 	w->plane_y = pre_plane_x * sin(angle) + w->plane_y * cos(angle);
 }
 
-void	ft_move_all_sides(t_global *g)
+void		ft_move_all_sides(t_global *g)
 {
 	double	dir_forward;
 	double	dir_right;
 	double	dir_move_x;
-	double dir_move_y;
+	double	dir_move_y;
 
 	dir_forward = g->k.move_forward - g->k.move_back;
 	dir_right = g->k.strafe_right - g->k.strafe_left;
@@ -41,34 +41,9 @@ void	ft_move_all_sides(t_global *g)
 	if (g->w.map[(int)(g->w.pos_x + dir_move_x * g->w.move_spd +
 	(dir_move_x > 0 ? 1.0 : -1.0) * g->w.collision)][(int)g->w.pos_y] == 0)
 		g->w.pos_x += dir_move_x * g->w.move_spd;
-	if(g->w.map[(int)g->w.pos_x][(int)(g->w.pos_y + dir_move_y *
+	if (g->w.map[(int)g->w.pos_x][(int)(g->w.pos_y + dir_move_y *
 	g->w.move_spd + (dir_move_y > 0 ? 1.0 : -1.0) * g->w.collision)] == 0)
 		g->w.pos_y += dir_move_y * g->w.move_spd;
-}
-
-void	ft_move_strate(t_global *g, double dir_forward)
-{
-	g->w.dir_x_sign = g->w.dir_x > 0 ? 1.0 : -1.0;
-	g->w.dir_y_sign = g->w.dir_y > 0 ? 1.0 : -1.0;
-
-	if (g->w.map[(int)(g->w.pos_x + dir_forward * g->w.dir_x_sign *
-								g->w.collision)][(int)g->w.pos_y] == 0)
-		g->w.pos_x += dir_forward * g->w.dir_x * g->w.move_spd;
-	if(g->w.map[(int)g->w.pos_x][(int)(g->w.pos_y + dir_forward *
-								g->w.dir_y_sign * g->w.collision)] == 0)
-		g->w.pos_y += dir_forward * g->w.dir_y * g->w.move_spd;
-}
-
-void	ft_move_sides(t_global *g, double dir_right)
-{
-	g->w.dir_x_sign = g->w.dir_x > 0 ? 1.0 : -1.0;
-	g->w.dir_y_sign = g->w.dir_y > 0 ? 1.0 : -1.0;
-	if (g->w.map[(int)(g->w.pos_x + dir_right * g->w.dir_y_sign *
-								g->w.collision )][(int)g->w.pos_y] == 0)
-		g->w.pos_x += dir_right * g->w.dir_y * g->w.move_spd;
-	if (g->w.map[(int)g->w.pos_x][(int)(g->w.pos_y - dir_right *
-								g->w.dir_x_sign * g->w.collision)] == 0)
-		g->w.pos_y -= dir_right * g->w.dir_x * g->w.move_spd;
 }
 
 int			ft_keys_press(int key, t_global *g)
@@ -89,8 +64,11 @@ int			ft_keys_press(int key, t_global *g)
 		g->k.rot_right = 1;
 	if (key > 17 && key < 21)
 		g->w.tex_mode = key - 17;
-	if (key == RELOAD)
-		g->k.enter = 1;
+	if (key == RELOAD && (g->k.enter = 1))
+	{
+		wolf_init(g);
+		system("afplay ./xpm/woopie.mp3&");
+	}
 	if (key == SHIFT)
 		g->k.shift = 1;
 	return (0);
@@ -134,8 +112,6 @@ int			ft_keys(t_keys *k, t_global *g)
 		ft_rotate(&g->w, g->w.rot_spd);
 	else if (k->rot_right)
 		ft_rotate(&g->w, -g->w.rot_spd);
-	if (k->enter)
-		wolf_init(g);
 	g->w.move_spd = g->w.frame_tme * (k->shift ? 2.0 : 4.0);
 	return (0);
 }

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: okuchko <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/25 17:21:24 by okuchko           #+#    #+#             */
-/*   Updated: 2019/07/25 17:21:30 by okuchko          ###   ########.fr       */
+/*   Created: 2019/08/20 17:42:09 by okuchko           #+#    #+#             */
+/*   Updated: 2019/08/20 17:42:11 by okuchko          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,33 +50,3 @@ void	ft_putpixel(t_global *g, int x, int y, int color)
 		i[y * IMG_WIDTH + x] = color;
 	}
 }
-
-void	ft_put_v_line(t_global *g, int x, int color)
-{
-	int y;
-
-
-	y = g->w.line_start;
-	while (y <= g->w.line_end)
-		ft_putpixel(g, x, y++, color);
-	// ft_printf("ft_put_v_line x = %d; y = {%d,%d}; %x \n", x, g->w.line_start, y--, color);
-}
-
-// void	ft_put_buff(t_global *g)
-// {
-// 	int y;
-// 	int x;
-
-// 	y = -1;
-// 	while(++y < IMG_HIGHT)
-// 	{
-// 		x = -1;
-// 		while(++x < IMG_WIDTH)
-// 		{
-// 			ft_putpixel(g, x, y, g->w.buff[y][x]);
-// 		}
-// 			// ft_print_color(g->w.buff[y][x]);
-// 	}
-
-// 	// ft_printf("ft_put_v_line x = %d; y = {%d,%d}; %x \n", x, g->w.line_start, y--, color);
-// }
