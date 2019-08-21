@@ -46,8 +46,8 @@ static void	ft_set_first_start(t_wolf *w, int j, int i)
 {
 	if (w->pos_x == 0.0 && w->pos_y == 0.0 && w->map[j][i] == 0)
 	{
-		w->pos_x = (double)i + 0.5;
-		w->pos_y = (double)j + 0.5;
+		w->pos_x = (double)j + 0.5;
+		w->pos_y = (double)i + 0.5;
 		w->pos_start_x = w->pos_x;
 		w->pos_start_y = w->pos_y;
 	}
