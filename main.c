@@ -65,10 +65,10 @@ void		wolf_init(t_global *g)
 	g->w.dir_x = -1;
 	g->w.dir_y = 0;
 	g->w.plane_x = 0;
-	g->w.plane_y = 0.66;
+	g->w.plane_y = 0.67;
 	g->w.frame_tme = 0.02;
 	g->w.move_spd = g->w.frame_tme * 4.0;
-	g->w.rot_spd = g->w.frame_tme * 2.0;
+	g->w.rot_spd = g->w.frame_tme * 3.0;
 	g->w.tex_mode = 1;
 	g->w.collision = 0.1;
 	g->w.win_play = 0;

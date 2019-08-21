@@ -24,7 +24,7 @@ void		ft_play_win_sound(t_wolf *w)
 static int	ft_x(void *p)
 {
 	(void)p;
-	system("leaks fractol > leaks");
+	system("leaks wolf3d > leaks");
 	exit(0);
 	return (0);
 }
